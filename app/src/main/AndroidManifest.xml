@@ -23,6 +23,13 @@
 
         </activity>
 
+        <service android:name=".server.AutoUpdateService">
+
+        </service>
+
+        <receiver android:name=".receiver.AutoUpdateReciver">
+
+        </receiver>
 
 
     </application>

@@ -1,6 +1,7 @@
 package com.debug8.coolweather.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.debug8.coolweather.R;
+import com.debug8.coolweather.server.AutoUpdateService;
 import com.debug8.coolweather.util.HttpCallBackListener;
 import com.debug8.coolweather.util.HttpUtil;
 import com.debug8.coolweather.util.Utility;
@@ -50,6 +52,22 @@ public class WeatherActivity extends Activity {
             queryWeatherCode(countyCode);
         }else{
             showWeather();
+        }
+    }
+
+    public void switchCity(View v){
+        Intent intent = new Intent(WeatherActivity.this,ChooseAreaActivity.class);
+        intent.putExtra("from_weather_activity",true);
+        startActivity(intent);
+        finish();
+    }
+
+    public void refreshWeather(View v){
+        publishText.setText("同步中...");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this);
+        String weatherCode = prefs.getString("weather_code","");
+        if(!TextUtils.isEmpty(weatherCode)){
+            queryWeatherInfo(weatherCode);
         }
     }
 
@@ -108,6 +126,8 @@ public class WeatherActivity extends Activity {
         currentDateText.setText(prefs.getString("current_date",""));
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
 
     }
 }
